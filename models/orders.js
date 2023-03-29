@@ -1,6 +1,6 @@
-import { Schema, SchemaTypes } from "mongoose";
+import { model, Schema, SchemaTypes } from "mongoose";
 import { nanoid } from "nanoid";
-import isEmail from "validator/lib/isemail";
+import isEmail from "validator/lib/isemail.js";
 
 const orderSchema = new Schema({
     name: { type: String, required: [true, "User's name required"] },
@@ -10,7 +10,7 @@ const orderSchema = new Schema({
     },
     address: { type: String, required: [true, "Please provide an address"] },
     product_id: String,
-    ref_id: { default: await nanoid(12) },
+    ref_id: { type: String, default: await nanoid(12) },
     variation: String,
     description: String,
 });

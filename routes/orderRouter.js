@@ -1,6 +1,5 @@
 import { Router } from "express";
 import orderModel from "../models/orders.js";
-import productModel from "../models/products.js";
 
 const router = Router();
 
@@ -21,12 +20,11 @@ router.get("/:id", async (req, res) => {
 router.post("/:id", async (req, res) => {
     const prod_id = req.params.id;
     const { name, email, address, variant, description } = req.body;
-    let prod = await productModel.findOne({ uid: prod_id });
     let newOrder = new orderModel({
         name,
         email,
         address,
-        product: prod._id,
+        product: prod_id,
         variation: variant,
         description,
     });
@@ -36,6 +34,17 @@ router.post("/:id", async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ msg: "Failed to save that order", err });
+    }
+});
+
+// Delete an order by id
+router.delete("/:id", async (req, res) => {
+    const order_id = req.params.id;
+    try {
+        await orderModel.deleteOne({ ref_id: order_id });
+        res.json({ msg: "Order deleted" });
+    } catch (err) {
+        res.status(500).json({ msg: "Failed to delete order", err });
     }
 });
 

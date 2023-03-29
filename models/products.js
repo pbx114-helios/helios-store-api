@@ -1,6 +1,6 @@
 import { model, Schema, SchemaTypes } from "mongoose";
 import { nanoid } from "nanoid";
-import variantModel from "./variants";
+import variantModel from "./variants.js";
 
 const productSchema = new Schema({
     name: String,

@@ -8,18 +8,18 @@ export const router = Router();
 // Gets all the products available for sale
 router.get("/", async (req, res) => {
     let products = await productModel.find({});
-    const final = products.map((val) => {
+    products.map((val) => {
         val.variants = val.var_str;
     });
-    res.json({ msg: "Products", products: final });
+    res.json({ msg: "Products", products });
 });
 
 // Gets the details of that specific product
 router.get("/:id", async (req, res) => {
     const id = req.params.id;
-    const product = await productModel.findOne({ uid: id });
-    product.variants = product.var_str;
-    res.json({ msg: "Product", product });
+    let product = await productModel.findOne({ uid: id });
+    let variants = await product.var_str;
+    res.json({ msg: "Product", product, variants });
 });
 
 // Posts a new product addition
@@ -72,7 +72,7 @@ router.delete("/:id", async (req, res) => {
     const id = req.params.id;
     try {
         await productModel.deleteOne({ uid: id });
-        await variantModel.delete({ for: id });
+        await variantModel.deleteMany({ for: id });
         res.json({ msg: "Product deleted" });
     } catch (err) {
         console.log(err);
