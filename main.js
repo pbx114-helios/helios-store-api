@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
     res.json({ msg: "Hello World" });
 });
 
-app.use("/buy", orderRoutes);
+app.use("/orders", orderRoutes);
 app.use("/products", productRoutes);
 
 app.listen(PORT, () => {
