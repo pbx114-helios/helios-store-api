@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import { config } from "dotenv";
 import productRoutes from "./routes/productRouter.js";
 import orderRoutes from "./routes/orderRouter.js";
+import adminRoutes from "./routes/adminRouter.js";
+import cookieParser from "cookie-parser";
 
 config();
 const app = express();
@@ -17,6 +19,7 @@ async function main() {
 const PORT = process.env.PORT || 3000;
 
 app.use(json());
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
     res.json({ msg: "Hello World" });
@@ -24,6 +27,7 @@ app.get("/", (req, res) => {
 
 app.use("/orders", orderRoutes);
 app.use("/products", productRoutes);
+app.use("/admin", adminRoutes);
 
 app.listen(PORT, () => {
     console.log(`listening on port ${PORT}`);

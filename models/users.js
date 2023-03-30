@@ -1,4 +1,5 @@
 import { model, Schema } from "mongoose";
+import { validate } from "email-validator";
 
 const userSchema = new Schema({
     name: { type: String, required: [true, "Please provide all the details"] },
@@ -9,6 +10,10 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: [true, "Please provide all the details"],
+    },
+    email: {
+        type: String,
+        validate: [validate, "Please provide a valid email id"],
     },
 });
 

@@ -7,23 +7,34 @@ export const router = Router();
 
 // Gets all the products available for sale
 router.get("/", async (req, res) => {
-    let products = await productModel.find({});
-    products.map((val) => {
-        val.variants = val.var_str;
-    });
-    res.json({ msg: "Products", products });
+    try {
+        let products = await productModel.find({});
+        let new_products = await Promise.all(
+            products.map(async (val) => {
+                let newVal = val.toObject();
+                newVal.variants = await val.var_str;
+                return newVal;
+            })
+        );
+        res.json({ msg: "Products", products: new_products });
+    } catch (err) {
+        res.status(500).json({ msg: "Oops. Something went wrong!" });
+    }
 });
 
 // Gets the details of that specific product
 router.get("/:id", async (req, res) => {
     const id = req.params.id;
     let product = await productModel.findOne({ uid: id });
+    if (!product) {
+        res.json({ msg: "Product not found" });
+    }
     let variants = await product.var_str;
     res.json({ msg: "Product", product, variants });
 });
 
 // Posts a new product addition
-router.post("/", async (req, res) => {
+router.post("/", requireAuth(), async (req, res) => {
     const prodInfo = req.body.productInfo;
 
     let product = new productModel(prodInfo);
@@ -37,7 +48,7 @@ router.post("/", async (req, res) => {
 });
 
 // Attaches variants to a specific product
-router.post("/var/:id", async (req, res) => {
+router.post("/var/:id", requireAuth(), async (req, res) => {
     const prod_id = req.params.id;
     const { vars } = req.body;
 
@@ -55,7 +66,7 @@ router.post("/var/:id", async (req, res) => {
 });
 
 // Deletes a specific variant
-router.delete("/var/:id", async (req, res) => {
+router.delete("/var/:id", requireAuth(), async (req, res) => {
     let prod_id = req.params.id;
     let name = req.body.name;
     try {
@@ -68,7 +79,7 @@ router.delete("/var/:id", async (req, res) => {
 });
 
 // Removes a product and all the variants attached to it
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", requireAuth(), async (req, res) => {
     const id = req.params.id;
     try {
         await productModel.deleteOne({ uid: id });
@@ -81,7 +92,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // Updates the details of a product
-router.put("/:id", async (req, res) => {
+router.put("/:id", requireAuth(), async (req, res) => {
     const id = req.params.id;
     const newInfo = req.body.updatedInfo;
     try {

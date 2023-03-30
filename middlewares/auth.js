@@ -1,15 +1,19 @@
 import { verify } from "jsonwebtoken";
 
 export const requireAuth = () => {
-    (req, res, next) => {
+    return (req, res, next) => {
         const token = req.cookies.token;
         if (!token) {
-            // redirect to some login page
+            res.status(401).json({
+                msg: "You need to be logged in to execute this",
+            });
             return;
         }
         const isLoggedIn = verify(token, process.env.JWT_SECRET);
         if (!isLoggedIn) {
-            res.status(401).redirect("/login");
+            res.status(401).json({
+                msg: "You need to be logged in to execute this",
+            });
             return;
         }
         // Set some res.locals
