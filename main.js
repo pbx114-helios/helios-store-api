@@ -5,6 +5,7 @@ import productRoutes from "./routes/productRouter.js";
 import orderRoutes from "./routes/orderRouter.js";
 import adminRoutes from "./routes/adminRouter.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 config();
 const app = express();
@@ -20,6 +21,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(json());
 app.use(cookieParser());
+app.use(cors());
 
 app.get("/", (req, res) => {
     res.json({ msg: "Hello World" });

@@ -25,12 +25,18 @@ router.get("/", async (req, res) => {
 // Gets the details of that specific product
 router.get("/:id", async (req, res) => {
     const id = req.params.id;
-    let product = await productModel.findOne({ uid: id });
-    if (!product) {
-        res.json({ msg: "Product not found" });
+    try { 
+
+        let product = await productModel.findOne({ uid: id });
+        if (!product) {
+            res.json({ msg: "Product not found" });
+            return
+        }
+        let variants = await product.var_str;
+        res.json({ msg: "Product", product, variants });
+    }catch(err) {
+        res.status(500).json({ msg: "Oops. Something went wrong!" });
     }
-    let variants = await product.var_str;
-    res.json({ msg: "Product", product, variants });
 });
 
 // Posts a new product addition
