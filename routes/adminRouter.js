@@ -33,7 +33,7 @@ router.post("/login/", async (req, res) => {
             });
             return;
         } else {
-            res.json({ msg: "Incorrect password" });
+            res.status(401).json({ msg: "Incorrect password" });
             return;
         }
     } catch (err) {
