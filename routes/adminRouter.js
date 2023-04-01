@@ -11,6 +11,7 @@ router.post("/login/", async (req, res) => {
     try {
         const { username, password } = req.body;
         const user = await User.findOne({ username });
+        console.log(user)
         if (!user) {
             res.json({
                 msg: "You are not an admin or you have entered the wrong username",
@@ -27,9 +28,11 @@ router.post("/login/", async (req, res) => {
             res.cookie("token", token, {
                 maxAge: maxAge * 1000,
                 httpOnly: true,
+                path : "/"
             }).json({
                 msg: "Successful login",
                 username: user.username,
+                token
             });
             return;
         } else {
