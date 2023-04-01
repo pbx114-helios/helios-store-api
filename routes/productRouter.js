@@ -41,9 +41,8 @@ router.get("/:id", async (req, res) => {
 
 // Posts a new product addition
 router.post("/", requireAuth(), async (req, res) => {
-    const prodInfo = req.body.productInfo;
-
-    let product = new productModel(prodInfo);
+    const {name, description, price} = req.body;
+    let product = new productModel({name, description, price});
     try {
         await product.save();
         res.status(200).json({ msg: "Product added" });
