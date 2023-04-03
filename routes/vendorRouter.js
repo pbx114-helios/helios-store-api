@@ -1,5 +1,5 @@
 import { Router } from "express";
-import Admin from "../models/admins.js";
+import Vendor from "../models/vendors.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -10,7 +10,7 @@ const maxAge = 3 * 60 * 60;
 router.post("/login/", async (req, res) => {
     try {
         const { username, password } = req.body;
-        const user = await Admin.findOne({ username });
+        const user = await Vendor.findOne({ username });
         console.log(user)
         if (!user) {
             res.status(401).json({
@@ -55,7 +55,7 @@ router.post("/signup/", async (req, res) => {
     const { name, username, email, password } = req.body;
     try {
         // Check if user already exists
-        let existingUser = await Admin.findOne({ username });
+        let existingUser = await Vendor.findOne({ username });
         if (existingUser) {
             res.json({
                 msg: "There's a user with this username in the records",
@@ -65,7 +65,7 @@ router.post("/signup/", async (req, res) => {
 
         // Creating a new user entry
         const hashed_pwd = await bcrypt.hash(password, 10);
-        const newUser = new Admin({
+        const newUser = new Vendor({
             name,
             username,
             password: hashed_pwd,

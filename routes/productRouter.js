@@ -12,7 +12,9 @@ router.get("/", async (req, res) => {
         let new_products = await Promise.all(
             products.map(async (val) => {
                 let newVal = val.toObject();
+                console.log(newVal)
                 newVal.variants = await val.var_str;
+                console.log(newVal)
                 return newVal;
             })
         );
@@ -40,7 +42,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Posts a new product addition
-router.post("/", requireAuth(), async (req, res) => {
+router.post("/", requireAuth("Admin"), async (req, res) => {
     const {name, description, price} = req.body;
     let product = new productModel({name, description, price});
     try {
@@ -53,7 +55,7 @@ router.post("/", requireAuth(), async (req, res) => {
 });
 
 // Attaches variants to a specific product
-router.post("/var/:id", requireAuth(), async (req, res) => {
+router.post("/var/:id", requireAuth("Admin"), async (req, res) => {
     const prod_id = req.params.id;
     const { vars } = req.body;
 
@@ -84,7 +86,7 @@ router.delete("/var/:id", requireAuth(), async (req, res) => {
 });
 
 // Removes a product and all the variants attached to it
-router.delete("/:id", requireAuth(), async (req, res) => {
+router.delete("/:id", requireAuth("Admin"), async (req, res) => {
     const id = req.params.id;
     try {
         await productModel.deleteOne({ uid: id });
@@ -97,7 +99,7 @@ router.delete("/:id", requireAuth(), async (req, res) => {
 });
 
 // Updates the details of a product
-router.put("/:id", requireAuth(), async (req, res) => {
+router.put("/:id", requireAuth("Admin"), async (req, res) => {
     const id = req.params.id;
     const newInfo = req.body.updatedInfo;
     try {

@@ -4,6 +4,7 @@ import { config } from "dotenv";
 import productRoutes from "./routes/productRouter.js";
 import orderRoutes from "./routes/orderRouter.js";
 import adminRoutes from "./routes/adminRouter.js";
+import vendorRoutes from "./routes/vendorRouter.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -30,6 +31,7 @@ app.get("/", (req, res) => {
 app.use("/orders", orderRoutes);
 app.use("/products", productRoutes);
 app.use("/admin", adminRoutes);
+app.use("/vendor", vendorRoutes);
 
 app.listen(PORT, () => {
     console.log(`listening on port ${PORT}`);

@@ -5,13 +5,13 @@ import { requireAuth } from "../middlewares/auth.js";
 const router = Router();
 
 // Get all orders
-router.get("/", requireAuth(), async (req, res) => {
+router.get("/", requireAuth("Vendor"), async (req, res) => {
     const orders = await orderModel.find({});
     res.json({ msg: "Orders found", orders });
 });
 
 // Get order by id
-router.get("/:id", requireAuth(), async (req, res) => {
+router.get("/:id", requireAuth("Vendor"), async (req, res) => {
     const order_id = req.params.id;
     const order = await orderModel.findOne({ ref_id: order_id });
     res.json({ msg: "Order found", order });
@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
 });
 
 // Delete an order by id
-router.delete("/:id", requireAuth(), async (req, res) => {
+router.delete("/:id", requireAuth("Vendor"), async (req, res) => {
     const order_id = req.params.id;
     try {
         await orderModel.deleteOne({ ref_id: order_id });
